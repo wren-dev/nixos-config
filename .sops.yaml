@@ -1,0 +1,14 @@
+# pub keys
+keys:
+- &users:
+    - &ren age1ys4fshyls4fn5a2vxx86klwn6y5q00pv4dp92wcq8j82lyj635hq0ghayl
+- &hosts: # nix-shell -p ssh-to-age --run 'cat /etc/ssh/ssh_host_ed25519_key.pub | ssh-to-age'
+    - &ren-laptop age1vq0sayu7dam8szz3mg4tnguvrcj6kc392fst93n2ng2ehk527cws5mwmxp
+
+creation_rules:
+    #path should be relative to location of this file (.sops.yaml)
+- path_regex: secrets.yaml$
+  key_groups: 
+    - age:
+      - *ren
+      - *ren-laptop

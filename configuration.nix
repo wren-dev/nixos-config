@@ -2,19 +2,30 @@
 # your system.  Help is available in the configuration.nix(5) man page
 # and in the NixOS manual (accessible by running ‘nixos-help’).
 
-{ config, pkgs, ... }:
+{ config, pkgs, inputs, ... }:
 
 {
   imports =
     [ # Include the results of the hardware scan.
       ./hardware-configuration.nix
+      inputs.sops-nix.nixosModules.sops
     ];
+  sops = {
+  defaultSopsFile = ./secrets.yaml;
+  validateSopsFiles = false;
+  secrets.machine-password.neededForUsers = true;
+      age = {
+      sshKeyPaths = [ "/etc/ssh/ssh_host_ed25519_key" ];
+      keyFile = "/var/lib/sops-nix/key.txt";
+      generateKey = true;
+    };
+  };
   nix.settings.experimental-features = [ "nix-command" "flakes" ];
   # Bootloader.
   boot.loader.systemd-boot.enable = true;
   boot.loader.efi.canTouchEfiVariables = true;
 
-  networking.hostName = "nixos"; # Define your hostname.
+  networking.hostName = "ren-laptop"; # Define your hostname.
   # networking.wireless.enable = true;  # Enables wireless support via wpa_supplicant.
 
   # Configure network proxy if necessary
@@ -59,7 +70,6 @@
   services.printing.enable = true;
 
   # Enable sound with pipewire.
-  hardware.pulseaudio.enable = false;
   security.rtkit.enable = true;
   services.pipewire = {
     enable = true;
@@ -77,7 +87,28 @@
   # Enable touchpad support (enabled default in most desktopManager).
   # services.xserver.libinput.enable = true;
 
+  services.openssh = {
+  enable = true;
+  ports = [ 22 ];
+  settings = {
+    PasswordAuthentication = true;
+    AllowUsers = null; # Allows all users by default. Can be [ "user1" "user2" ]
+    UseDns = true;
+    X11Forwarding = false;
+    PermitRootLogin = "prohibit-password"; # "yes", "without-password", "prohibit-password", "forced-commands-only", "no"
+  };
+};
+  services.fail2ban = {
+     enable = true;
+     maxretry = 5;
+         ignoreIP = [
+      "10.0.0.0/8" "172.16.0.0/12" "192.168.0.0/16"
+    ];
+    bantime = "72h"; # Ban IPs for one day on the first ban
+};
+
   # Define a user account. Don't forget to set a password with ‘passwd’.
+  users.mutableUsers = false;
   users.users.ren = {
     isNormalUser = true;
     description = "Ren";
@@ -85,11 +116,18 @@
     packages = with pkgs; [
     #  thunderbird
     ];
+    hashedPasswordFile = config.sops.secrets.machine-password.path;
+  };
+  users.users.root = {
+    hashedPasswordFile = config.sops.secrets.machine-password.path;
+
   };
 
   # Enable automatic login for the user.
-  services.xserver.displayManager.autoLogin.enable = true;
-  services.xserver.displayManager.autoLogin.user = "ren";
+  services.displayManager.autoLogin = {
+    enable = true;
+    user = "ren";
+  };
 
   # Workaround for GNOME autologin: https://github.com/NixOS/nixpkgs/issues/103746#issuecomment-945091229
   systemd.services."getty@tty1".enable = false;
@@ -110,6 +148,9 @@
   #  vim # Do not forget to add an editor to edit configuration.nix! The Nano editor is also installed by default.
     git
     wget
+    rclone
+    age
+    sops
   ];
 
   # Some programs need SUID wrappers, can be configured further or are
@@ -122,11 +163,10 @@
 
   # List services that you want to enable:
 
-  # Enable the OpenSSH daemon.
-  # services.openssh.enable = true;
+
 
   # Open ports in the firewall.
-  # networking.firewall.allowedTCPPorts = [ ... ];
+  networking.firewall.allowedTCPPorts = [ 22 ];
   # networking.firewall.allowedUDPPorts = [ ... ];
   # Or disable the firewall altogether.
   # networking.firewall.enable = false;
