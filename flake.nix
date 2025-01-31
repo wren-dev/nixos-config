@@ -25,8 +25,14 @@
                     home-manager.nixosModules.home-manager {
                         home-manager.useGlobalPkgs = true;
                         home-manager.useUserPackages = true;
-                        home-manager.users.ren = import ./users/ren/home.nix;
+                        home-manager.users.ren.imports = [
+                            ./home.nix
+			    inputs.sops-nix.homeManagerModule
+			];
 			home-manager.extraSpecialArgs = { inherit inputs; };
+			home-manager.sharedModules = [
+                            sops-nix.homeManagerModules.sops
+                        ];
                     }
                     sops-nix.nixosModules.sops
                 ];

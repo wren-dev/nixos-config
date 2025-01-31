@@ -1,7 +1,4 @@
-{ config, pkgs, inputs, ... }: {
-  imports = [
-    inputs.sops-nix.homeManagerModules.sops
-  ];
+{ config, pkgs, inputs, sops-nix, ... }: {
     home.username = "ren";
     home.homeDirectory = "/home/ren";
 
@@ -19,14 +16,19 @@
 	extraConfig.init.defaultBranch = "main";
     };
 
+      systemd.user.services.mbsync.Unit.After = [ "sops-nix.service" ];
+	
     sops = {
     age.keyFile = "/home/ren/.config/sops/age/keys.txt";
-
-
-    defaultSopsFile = ../../secrets.yaml;
-    validateSopsFiles = false;
+    defaultSopsFile = ./secrets.yaml;
+    defaultSymlinkPath = "/run/user/1000/secrets";
+    defaultSecretsMountPoint = "/run/user/1000/secrets.d";
+    secrets.rclone-dropbox = {};
+    #templates."rclone.conf".content = ''
+    #    "${config.sops.placeholder.rclone-dropbox}"
+    #'';
     };
-    # xdg.configFile."rclone/rclone.conf".source = config.sops.secrets."rclone-dropbox".path;
+    xdg.configFile."rclone/rclone.conf".source = config.lib.file.mkOutOfStoreSymlink "/run/user/1000/secrets/rclone-dropbox";
 
     home.stateVersion = "24.11";
     programs.home-manager.enable = true;
