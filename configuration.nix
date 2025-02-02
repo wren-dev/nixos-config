@@ -14,6 +14,17 @@
   defaultSopsFile = ./secrets.yaml;
   validateSopsFiles = false;
   secrets.machine-password.neededForUsers = true;
+  secrets.cloudflare-token = {};
+  templates."ddclient.conf".content = ''
+    cache=/var/lib/ddclient
+    usev4=webv4
+    webv4=dynamicdns.park-your-domain.com/getip
+    protocol=cloudflare, \
+    zone=wren-homepage.online, \
+    login=token, \
+    password="${config.sops.placeholder.cloudflare-token}" \
+    laptop.wren-homepage.online
+  '';
       age = {
       sshKeyPaths = [ "/etc/ssh/ssh_host_ed25519_key" ];
       keyFile = "/var/lib/sops-nix/key.txt";
@@ -107,6 +118,18 @@
     bantime = "72h"; # Ban IPs for one day on the first ban
 };
 
+  services.ddclient = {
+    enable = false;
+    configFile = config.sops.templates."ddclient.conf".path;
+    
+  };
+  services.tailscale.enable = true;
+  services.cloudflare-dyndns = {
+    enable = true;
+    domains = [ "laptop.wren-homepage.online" ];
+    apiTokenFile = config.sops.secrets.cloudflare-token.path;
+  };
+
   # Define a user account. Don't forget to set a password with ‘passwd’.
   users.mutableUsers = false;
   users.users.ren = {
@@ -151,7 +174,12 @@
     rclone
     age
     sops
+    #ddclient
+    cloudflare-dyndns
+    tailscale
   ];
+  
+  programs.fuse.userAllowOther = true;
 
   # Some programs need SUID wrappers, can be configured further or are
   # started in user sessions.
@@ -166,8 +194,8 @@
 
 
   # Open ports in the firewall.
-  networking.firewall.allowedTCPPorts = [ 22 ];
-  # networking.firewall.allowedUDPPorts = [ ... ];
+  networking.firewall.allowedTCPPorts = [ 22 53 ];
+  networking.firewall.allowedUDPPorts = [ 53 ];
   # Or disable the firewall altogether.
   # networking.firewall.enable = false;
 

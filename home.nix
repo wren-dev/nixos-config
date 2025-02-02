@@ -1,4 +1,4 @@
-{ config, pkgs, inputs, sops-nix, ... }: {
+{ config, pkgs, inputs, sops-nix, lib, ... }: {
     home.username = "ren";
     home.homeDirectory = "/home/ren";
 
@@ -13,11 +13,15 @@
         enable = true;
         userName  = "Wren";
         userEmail = "renmain@proton.me";
-	extraConfig.init.defaultBranch = "main";
+    extraConfig.init.defaultBranch = "main";
     };
 
       systemd.user.services.mbsync.Unit.After = [ "sops-nix.service" ];
-	
+
+    home.activation.rclone = lib.hm.dag.entryAfter [ "writeBoundary" ] ''
+        mkdir -p /home/ren/mnt/dropbox
+    '';
+
     sops = {
     age.keyFile = "/home/ren/.config/sops/age/keys.txt";
     defaultSopsFile = ./secrets.yaml;
@@ -29,6 +33,26 @@
     #'';
     };
     xdg.configFile."rclone/rclone.conf".source = config.lib.file.mkOutOfStoreSymlink "/run/user/1000/secrets/rclone-dropbox";
+    systemd.user.services.rclone-dropbox = {
+        Unit = {
+            Description = "Rclone mount: dropbox";
+            After = "network-online.target";
+            StartLimitInterval = 200;
+            StartLimitBurst = 2;
+        };
+        Install = {
+            WantedBy = [ "default.target" ];
+        };
+        Service = {
+            ExecStart = ''
+	    	${pkgs.rclone}/bin/rclone mount --allow-other --vfs-cache-mode full --cache-dir /home/ren/.local/cache dropbox: /home/ren/mnt/dropbox
+            '';
+            ExecStop = ''
+                /run/wrappers/bin/fusermount -zu /home/ren/mnt/dropbox
+	    '';
+	    Environment = [ "PATH=/run/wrappers/bin/:$PATH" ];
+        };
+    };
 
     home.stateVersion = "24.11";
     programs.home-manager.enable = true;
