@@ -28,11 +28,11 @@
     defaultSymlinkPath = "/run/user/1000/secrets";
     defaultSecretsMountPoint = "/run/user/1000/secrets.d";
     secrets.rclone-dropbox = {};
-    #templates."rclone.conf".content = ''
-    #    "${config.sops.placeholder.rclone-dropbox}"
-    #'';
+    templates."rclone.conf".content = ''
+        "${config.sops.placeholder.rclone-dropbox}"
+    '';
     };
-    xdg.configFile."rclone/rclone.conf".source = config.lib.file.mkOutOfStoreSymlink "/run/user/1000/secrets/rclone-dropbox";
+    xdg.configFile."rclone/rclone.conf".source = config.sops.templates."rclone.conf".path;
     systemd.user.services.rclone-dropbox = {
         Unit = {
             Description = "Rclone mount: dropbox";

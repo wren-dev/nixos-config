@@ -123,9 +123,9 @@
     configFile = config.sops.templates."ddclient.conf".path;
     
   };
-  services.tailscale.enable = true;
+  services.tailscale.enable = false;
   services.cloudflare-dyndns = {
-    enable = true;
+    enable = false;
     domains = [ "laptop.wren-homepage.online" ];
     apiTokenFile = config.sops.secrets.cloudflare-token.path;
   };
