@@ -27,11 +27,29 @@
     defaultSopsFile = ./secrets.yaml;
     defaultSymlinkPath = "/run/user/1000/secrets";
     defaultSecretsMountPoint = "/run/user/1000/secrets.d";
-    secrets.rclone-dropbox = {};
-    templates."rclone.conf".content = ''
-        ${config.sops.placeholder.rclone-dropbox}
-    '';
     };
+
+    sops.secrets.dropbox-token = {};
+    sops.secrets.mega-username = {};
+    sops.secrets.mega-password = {};
+    sops.secrets.proton-config = {};
+    sops.secrets.gdrive-config = {};
+    sops.templates."rclone.conf".content = ''
+        [dropbox]
+        type = dropbox
+        token = ${config.sops.placeholder.dropbox-token}
+
+        [mega]
+        type = mega
+        user = ${config.sops.placeholder.mega-username}
+        pass = ${config.sops.placeholder.mega-password}
+
+        [proton]
+        ${config.sops.placeholder.proton-config}
+
+        [gdrive]
+        ${config.sops.placeholder.gdrive-config}
+    '';
     xdg.configFile."rclone/rclone.conf".source = config.lib.file.mkOutOfStoreSymlink "${config.sops.templates."rclone.conf".path}";
     systemd.user.services.rclone-dropbox = {
         Unit = {
@@ -45,12 +63,12 @@
         };
         Service = {
             ExecStart = ''
-	    	${pkgs.rclone}/bin/rclone mount --allow-other --vfs-cache-mode full --cache-dir /home/ren/.local/cache dropbox: /home/ren/mnt/dropbox
+            ${pkgs.rclone}/bin/rclone mount --allow-other --vfs-cache-mode full --cache-dir /home/ren/.local/cache dropbox: /home/ren/mnt/dropbox
             '';
             ExecStop = ''
                 /run/wrappers/bin/fusermount -zu /home/ren/mnt/dropbox
-	    '';
-	    Environment = [ "PATH=/run/wrappers/bin/:$PATH" ];
+        '';
+        Environment = [ "PATH=/run/wrappers/bin/:$PATH" ];
         };
     };
 
