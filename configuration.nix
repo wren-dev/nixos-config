@@ -154,6 +154,9 @@ environment.systemPackages = with pkgs; [
     cloudflare-dyndns
     tailscale
     statix
+    gnumake
+    gcc
+    unzip
 ];
 #}}}
 
