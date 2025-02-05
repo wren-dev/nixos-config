@@ -2,13 +2,10 @@
 
 #{{{ Basic Stuff
 imports = [
-    ./hardware-configuration.nix
     inputs.sops-nix.nixosModules.sops
 ];
-system.stateVersion = "24.11"; # Did you read the comment?
 nix.settings.experimental-features = [ "nix-command" "flakes" ];
 nixpkgs.config.allowUnfree = true;
-time.timeZone = "America/Chicago";
 #{{{ Locale
 i18n.defaultLocale = "en_US.UTF-8";
 
@@ -28,7 +25,7 @@ i18n.extraLocaleSettings = {
 
 #{{{ Secrets
 sops = {
-    defaultSopsFile = ./secrets.yaml;
+    defaultSopsFile = ./../secrets.yaml;
     validateSopsFiles = false;
     age = {
         sshKeyPaths = [ "/etc/ssh/ssh_host_ed25519_key" ];

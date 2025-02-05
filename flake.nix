@@ -18,20 +18,18 @@ outputs = inputs@{ nixpkgs, home-manager, sops-nix, ... }: {
             system = "x86_64-linux";
             specialArgs = { inherit inputs; };
             modules = [
-                ./configuration.nix
+                ./host/laptop.nix
                 home-manager.nixosModules.home-manager {
                     home-manager = {
                         useGlobalPkgs = true;
                         useUserPackages = true;
                         users.ren.imports = [
-                            ./home.nix
+                            ./home/laptop.nix
                             inputs.sops-nix.homeManagerModule
                         ];
+                        extraSpecialArgs = { inherit inputs; };
+                        sharedModules = [ sops-nix.homeManagerModules.sops ];
                     };
-                    home-manager.extraSpecialArgs = { inherit inputs; };
-                    home-manager.sharedModules = [
-                        sops-nix.homeManagerModules.sops
-                    ];
                 }
                 sops-nix.nixosModules.sops
             ];
