@@ -38,9 +38,6 @@ sops = {
 };
 #}}}
 
-
-
-
 #{{{ Services
 security.rtkit.enable = true;
 services = {
