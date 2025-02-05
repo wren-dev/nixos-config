@@ -35,41 +35,12 @@ sops = {
 };
 #}}}
 
-#{{{ Bootloader
-boot.loader.systemd-boot.enable = true;
-boot.loader.efi.canTouchEfiVariables = true;
-#}}}
 
-#{{{ Networking
-networking = {
-    hostName = "ren-laptop"; # Define your hostname.
-    networkmanager.enable = true;
-    firewall.allowedTCPPorts = [ 22 53 ];
-    firewall.allowedUDPPorts = [ 53 ];
-};
-#}}}
 
-#{{{ Desktop Environment 
-services.xserver = {
-    enable = true;
-    displayManager.gdm.enable = true;
-    desktopManager.gnome.enable = true;
-    xkb = {
-        layout = "us";
-        variant = "";
-    };
-};
-services.displayManager.autoLogin = {
-    enable = true;
-    user = "ren";
-};
-
-#}}}
 
 #{{{ Services
 security.rtkit.enable = true;
 services = {
-    printing.enable = true;
     pipewire = {
         enable = true;
         alsa.enable = true;
@@ -101,7 +72,7 @@ services = {
 sops.secrets.cloudflare-token = {};
 services.cloudflare-dyndns = {
     enable = false;
-    domains = [ "laptop.wren-homepage.online" ];
+    domains = [ "???.wren-homepage.online" ];
     apiTokenFile = config.sops.secrets.cloudflare-token.path;
 };
 
@@ -154,6 +125,7 @@ environment.systemPackages = with pkgs; [
     gnumake
     gcc
     unzip
+    ripgrep
 ];
 #}}}
 

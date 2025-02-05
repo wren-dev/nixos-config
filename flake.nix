@@ -12,9 +12,11 @@ inputs = {
     };
 };
 
-outputs = inputs@{ nixpkgs, home-manager, sops-nix, ... }: {
+outputs = inputs@{ nixpkgs, home-manager, sops-nix, ... }: let
+    vars = import ./vars.nix;
+in {
     nixosConfigurations = {
-        ren-laptop = nixpkgs.lib.nixosSystem {
+        ${vars.hostNames.laptop} = nixpkgs.lib.nixosSystem {
             system = "x86_64-linux";
             specialArgs = { inherit inputs; };
             modules = [
@@ -23,12 +25,12 @@ outputs = inputs@{ nixpkgs, home-manager, sops-nix, ... }: {
                     home-manager = {
                         useGlobalPkgs = true;
                         useUserPackages = true;
-                        users.ren.imports = [
+                        users.${vars.userName}.imports = [
                             ./home/laptop.nix
                             inputs.sops-nix.homeManagerModule
                         ];
                         extraSpecialArgs = { inherit inputs; };
-                        sharedModules = [ sops-nix.homeManagerModules.sops ];
+                        sharedModules = [sops-nix.homeManagerModules.sops ];
                     };
                 }
                 sops-nix.nixosModules.sops
