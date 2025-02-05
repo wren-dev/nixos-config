@@ -1,4 +1,6 @@
-{ config, pkgs, inputs, ... }: {
+{ config, pkgs, inputs, ... }: let
+    vars = import ./../vars.nix;
+in {
 
 #{{{ Basic Stuff
 imports = [
@@ -16,7 +18,7 @@ boot.loader.efi.canTouchEfiVariables = true;
 
 #{{{ Networking
 networking = {
-    hostName = "ren-laptop"; # Define your hostname.
+    hostName = vars.hostNames.laptop; # Define your hostname.
     networkmanager.enable = true;
     firewall.allowedTCPPorts = [ 22 53 ];
     firewall.allowedUDPPorts = [ 53 ];
@@ -35,7 +37,7 @@ services.xserver = {
 };
 services.displayManager.autoLogin = {
     enable = true;
-    user = "ren";
+    user = vars.userName;
 };
 
 #}}}

@@ -1,6 +1,8 @@
-{ config, pkgs, inputs, sops-nix, lib, ... }: {
-    home.username = "ren";
-    home.homeDirectory = "/home/ren";
+{ config, pkgs, inputs, sops-nix, lib, ... }: let 
+    vars = import ./../vars.nix;
+in {
+    home.username = vars.userName;
+    home.homeDirectory = "/home/${vars.userName}";
 
     # link all files in `./scripts` to `~/.config/i3/scripts`
     # home.file.".config/i3/scripts" = {
@@ -11,19 +13,19 @@
 
     programs.git = {
         enable = true;
-        userName  = "Wren";
-        userEmail = "renmain@proton.me";
+        userName  = vars.gitUserName;
+        userEmail = vars.email;
     extraConfig.init.defaultBranch = "main";
     };
 
       systemd.user.services.mbsync.Unit.After = [ "sops-nix.service" ];
 
     home.activation.rclone = lib.hm.dag.entryAfter [ "writeBoundary" ] ''
-        mkdir -p /home/ren/mnt/dropbox
+        mkdir -p ${config.home.homeDirectory}/mnt/dropbox
     '';
 
     sops = {
-    age.keyFile = "/home/ren/.config/sops/age/keys.txt";
+    age.keyFile = "${config.home.homeDirectory}/.sops_age_key.txt";
     defaultSopsFile = ./../secrets.yaml;
     defaultSymlinkPath = "/run/user/1000/secrets";
     defaultSecretsMountPoint = "/run/user/1000/secrets.d";
@@ -63,10 +65,10 @@
         };
         Service = {
             ExecStart = ''
-            ${pkgs.rclone}/bin/rclone mount --allow-other --vfs-cache-mode full --cache-dir /home/ren/.local/cache dropbox: /home/ren/mnt/dropbox
+            ${pkgs.rclone}/bin/rclone mount --allow-other --vfs-cache-mode full --cache-dir ${config.home.homeDirectory}/.local/cache dropbox: ${config.home.homeDirectory}/mnt/dropbox
             '';
             ExecStop = ''
-                /run/wrappers/bin/fusermount -zu /home/ren/mnt/dropbox
+                /run/wrappers/bin/fusermount -zu ${config.home.homeDirectory}/mnt/dropbox
         '';
         Environment = [ "PATH=/run/wrappers/bin/:$PATH" ];
         };

@@ -1,4 +1,6 @@
-{ config, pkgs, inputs, ... }: {
+{ config, pkgs, inputs, ... }: let
+    vars = import ./../vars.nix;
+in {
 
 #{{{ Basic Stuff
 imports = [
@@ -52,7 +54,7 @@ services = {
         ports = [ 22 ];
         settings = {
             PasswordAuthentication = true;
-            AllowUsers = [ "ren" ];
+            AllowUsers = [ vars.userName ];
             UseDns = true;
             X11Forwarding = false;
             PermitRootLogin = "no";
@@ -82,9 +84,9 @@ services.cloudflare-dyndns = {
 sops.secrets.machine-password.neededForUsers = true;
 users = {
     mutableUsers = false;
-    users.ren = {
+    users.${vars.userName} = {
         isNormalUser = true;
-        description = "ren";
+        description = vars.userName;
         extraGroups = [ "networkmanager" "wheel" ];
         packages = with pkgs; [
         #  thunderbird
