@@ -122,6 +122,16 @@ environment.systemPackages = with pkgs; [
     cloudflare-dyndns
     tailscale
     statix
+    nvd
+    cached-nix-shell
+    nix-tree
+    nix-output-monitor
+    nix-melt
+    nix-index
+    nix-du
+    nix-diff
+    nh
+    manix
     gnumake
     gcc
     unzip

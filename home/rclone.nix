@@ -49,6 +49,8 @@ systemd.user.services.rclone-dropbox = {
         WantedBy = [ "default.target" ];
     };
     Service = {
+        Restart= "on-failure";
+        RestartSec = 30;
         ExecStart = ''
         ${pkgs.rclone}/bin/rclone mount --allow-other --vfs-cache-mode full --cache-dir ${config.home.homeDirectory}/.local/cache dropbox: ${config.home.homeDirectory}/mnt/dropbox
         '';
@@ -72,6 +74,8 @@ systemd.user.services.rclone-mega = {
         WantedBy = [ "default.target" ];
     };
     Service = {
+        Restart= "on-failure";
+        RestartSec = 30;
         ExecStart = ''
         ${pkgs.rclone}/bin/rclone mount --allow-other --vfs-cache-mode full --cache-dir ${config.home.homeDirectory}/.local/cache mega: ${config.home.homeDirectory}/mnt/mega
         '';
@@ -95,8 +99,10 @@ systemd.user.services.rclone-proton = {
         WantedBy = [ "default.target" ];
     };
     Service = {
+        Restart= "on-failure";
+        RestartSec = 30;
         ExecStart = ''
-        ${pkgs.rclone}/bin/rclone mount --allow-other --vfs-cache-mode full --cache-dir ${config.home.homeDirectory}/.local/cache proton: ${config.home.homeDirectory}/mnt/proton
+        ${pkgs.rclone}/bin/rclone --config ${config.home.homeDirectory}/.config/rclone/rclone.conf mount --allow-other --vfs-cache-mode full --cache-dir ${config.home.homeDirectory}/.local/cache proton: ${config.home.homeDirectory}/mnt/proton
         '';
         ExecStop = ''
             /run/wrappers/bin/fusermount -zu ${config.home.homeDirectory}/mnt/proton
@@ -118,6 +124,8 @@ systemd.user.services.rclone-gdrive = {
         WantedBy = [ "default.target" ];
     };
     Service = {
+        Restart= "on-failure";
+        RestartSec = 30;
         ExecStart = ''
         ${pkgs.rclone}/bin/rclone mount --allow-other --vfs-cache-mode full --cache-dir ${config.home.homeDirectory}/.local/cache gdrive: ${config.home.homeDirectory}/mnt/gdrive
         '';
