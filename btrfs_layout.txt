@@ -1,7 +1,0 @@
-/
-/home
-/home/ren/.cache
-/home/ren/mnt/sd
-/nix
-/persist
-/boot

@@ -136,6 +136,7 @@ environment.systemPackages = with pkgs; [
     gcc
     unzip
     ripgrep
+    keepassxc
 ];
 #}}}
 
