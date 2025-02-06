@@ -8,7 +8,7 @@ in {
 disko.devices.disk.internal.type = "disk";
 disko.devices.disk.internal.device = "/dev/mmcblk0";
 disko.devices.disk.internal.content = {
-    type = "gpt"
+    type = "gpt";
     partitions = {
         ESP = {
             type = "EF00";
@@ -36,7 +36,7 @@ disko.devices.disk.internal.content = {
 disko.devices.disk.sdcard.type = "disk";
 disko.devices.disk.sdcard.device = "/dev/mmcblk1";
 disko.devices.disk.sdcard.content = {
-    type = "gpt"
+    type = "gpt";
     partitions = {
         sd_lvm = {
             size = "100%";
@@ -47,8 +47,8 @@ disko.devices.disk.sdcard.content = {
         };
     };
 };
-disk.devices.lvm_vg.root_vg.type = "lvm_vg";
-disk.devices.lvm_vg.root_vg.lvs.root = {
+disko.devices.lvm_vg.root_vg.type = "lvm_vg";
+disko.devices.lvm_vg.root_vg.lvs.root = {
     size = "100%FREE";
     content = {
         type = "btrfs";
@@ -68,8 +68,8 @@ disk.devices.lvm_vg.root_vg.lvs.root = {
         };
     };
 };
-disk.devices.lvm_vg.sd_vg.type = "lvm_vg";
-disk.devices.lvm_vg.root_vg.lvs.sdcard = {
+disko.devices.lvm_vg.sd_vg.type = "lvm_vg";
+disko.devices.lvm_vg.root_vg.lvs.sdcard = {
     size = "100%FREE";
     content = {
         type = "btrfs";
