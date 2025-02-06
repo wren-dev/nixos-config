@@ -11,9 +11,13 @@ inputs = {
       url = "github:mic92/sops-nix";
       inputs.nixpkgs.follows = "nixpkgs";
     };
+    disko = {
+        url = "github:nix-community/disko";
+        inputs.nixpkgs.follows = "nixpkgs";
+    };
 };
 
-outputs = inputs@{ nixpkgs, home-manager, sops-nix, ... }: let
+outputs = inputs@{ nixpkgs, home-manager, sops-nix, disko, ... }: let
     vars = import ./vars.nix;
 in {
     nixosConfigurations = {
@@ -35,6 +39,7 @@ in {
                     };
                 }
                 sops-nix.nixosModules.sops
+                disko.nixosModules.disko
             ];
         };
     };

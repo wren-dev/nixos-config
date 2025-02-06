@@ -7,6 +7,7 @@ in {
 imports = [
     (modulesPath + "/installer/scan/not-detected.nix")
     ./common.nix
+    ./laptop-disko.nix
 ];
 system.stateVersion = "24.11"; # Did you read the comment?
 time.timeZone = "America/Chicago";
@@ -21,21 +22,6 @@ boot.initrd.availableKernelModules = [ "ahci" "xhci_pci" "usb_storage" "sd_mod" 
 boot.initrd.kernelModules = [ ];
 boot.kernelModules = [ "kvm-intel" ];
 boot.extraModulePackages = [ ];
-#}}}
-
-#{{{ FS
-fileSystems = {
-    "/" = {
-        device = "/dev/disk/by-uuid/c742537c-d1e5-4e71-84d9-9575d34feff2";
-        fsType = "ext4";
-    };
-    "/boot" = {
-        device = "/dev/disk/by-uuid/A4C6-C3FC";      
-        fsType = "vfat";
-        options = [ "fmask=0077" "dmask=0077" ];
-    };
-};
-swapDevices = [ ];
 #}}}
 
 #{{{ Networking
