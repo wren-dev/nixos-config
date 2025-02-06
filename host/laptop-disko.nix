@@ -69,7 +69,7 @@ disko.devices.lvm_vg.root_vg.lvs.root = {
     };
 };
 disko.devices.lvm_vg.sd_vg.type = "lvm_vg";
-disko.devices.lvm_vg.root_vg.lvs.sdcard = {
+disko.devices.lvm_vg.sd_vg.lvs.sdcard = {
     size = "100%FREE";
     content = {
         type = "btrfs";
