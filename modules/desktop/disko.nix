@@ -1,6 +1,4 @@
 # vim vim: set ts=4 sw=4 et fdm=marker :
-/dev/sdb: hdd
-/dev/sda: loose
 
 {
 
@@ -36,7 +34,7 @@ disko.devices.disk.ssd_internal.content = {
 
 # Loosely connected SSD
 disko.devices.disk.ssd_loose.type = "disk";
-disko.devices.disk.ssd_loose.device = "/dev/wwn-0x5f8db4c1417010b2";
+disko.devices.disk.ssd_loose.device = "/dev/disk/by-id/wwn-0x5f8db4c1417010b2";
 disko.devices.disk.ssd_loose.content = {
     type = "gpt";
     partitions = {
@@ -45,22 +43,6 @@ disko.devices.disk.ssd_loose.content = {
             content = {
                 type = "lvm_pv";
                 vg = "home_vg";
-            };
-        };
-    };
-};
-
-# HDD
-disko.devices.disk.hdd.type = "disk";
-disko.devices.disk.hdd.device = "/dev/wwn-0x5f8db4c1417010b2";
-disko.devices.disk.hdd.content = {
-    type = "gpt";
-    partitions = {
-        sd_lvm = {
-            size = "100%";
-            content = {
-                type = "lvm_pv";
-                vg = "hdd_vg";
             };
         };
     };
@@ -108,18 +90,4 @@ disko.devices.lvm_vg.home_vg.lvs.loosessd = {
     };
 };
 
-disko.devices.lvm_vg.hdd_vg.type = "lvm_vg";
-disko.devices.lvm_vg.hdd_vg.lvs.harddrive = {
-    size = "100%FREE";
-    content = {
-        type = "btrfs";
-        extraArgs = ["-f"];
-        subvolumes = {
-            "/hdd" = {
-                mountOptions = ["subvol=home" "noatime"];
-                mountpoint = "/hdd";
-            };
-        };
-    };
-};
 }
