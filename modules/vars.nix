@@ -4,6 +4,7 @@
     email = "renmain@proton.me";
     hostNames = {
         laptop = "ren-laptop";
+        desktop = "ren-desktop";
     };
     gitUserName = "Wren";
 }

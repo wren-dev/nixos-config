@@ -42,6 +42,27 @@ in {
                 disko.nixosModules.disko
             ];
         };
+        ${vars.hostNames.desktop} = nixpkgs.lib.nixosSystem {
+            system = "x86_64-linux";
+            specialArgs = { inherit inputs; };
+            modules = [
+                ./modules/desktop/config.nix
+                home-manager.nixosModules.home-manager {
+                    home-manager = {
+                        useGlobalPkgs = true;
+                        useUserPackages = true;
+                        users.${vars.userName}.imports = [
+                            ./modules/desktop/home.nix
+                            inputs.sops-nix.homeManagerModule
+                        ];
+                        extraSpecialArgs = { inherit inputs; };
+                        sharedModules = [sops-nix.homeManagerModules.sops ];
+                    };
+                }
+                sops-nix.nixosModules.sops
+                disko.nixosModules.disko
+            ];
+        };
     };
 };
 }
