@@ -21,7 +21,7 @@ extraConfig.init.defaultBranch = "main";
 systemd.user.services.mbsync.Unit.After = [ "sops-nix.service" ];
 sops = {
     age.keyFile = "${config.home.homeDirectory}/.config/sops/age/keys.txt";
-    defaultSopsFile = ./../resources/secrets.yaml;
+    defaultSopsFile = ./../res/secrets.yaml;
     defaultSymlinkPath = "/run/user/1000/secrets";
     defaultSecretsMountPoint = "/run/user/1000/secrets.d";
 };

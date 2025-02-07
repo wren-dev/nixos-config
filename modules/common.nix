@@ -28,7 +28,7 @@ i18n.extraLocaleSettings = {
 
 #{{{ Secrets
 sops = {
-    defaultSopsFile = ./../resources/secrets.yaml;
+    defaultSopsFile = ./../res/secrets.yaml;
     validateSopsFiles = false;
     age = {
         sshKeyPaths = [ "/etc/ssh/ssh_host_ed25519_key" ];
