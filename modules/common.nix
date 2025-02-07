@@ -1,6 +1,6 @@
 # vim vim: set ts=4 sw=4 et fdm=marker :
 { config, pkgs, inputs, ... }: let
-    vars = import ./../vars.nix;
+    vars = import ./vars.nix;
 in {
 
 #{{{ Basic Stuff
@@ -28,7 +28,7 @@ i18n.extraLocaleSettings = {
 
 #{{{ Secrets
 sops = {
-    defaultSopsFile = ./../secrets.yaml;
+    defaultSopsFile = ./../resources/secrets.yaml;
     validateSopsFiles = false;
     age = {
         sshKeyPaths = [ "/etc/ssh/ssh_host_ed25519_key" ];

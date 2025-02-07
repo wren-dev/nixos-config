@@ -1,6 +1,6 @@
 # vim vim: set ts=4 sw=4 et fdm=marker :
 { config, pkgs, inputs, sops-nix, lib, ... }: let
-    vars = import ./../vars.nix;
+    vars = import ./vars.nix;
 in {
 
 home.activation.rclone = lib.hm.dag.entryAfter [ "writeBoundary" ] ''

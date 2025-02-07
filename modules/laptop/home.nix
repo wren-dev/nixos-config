@@ -1,7 +1,7 @@
 # vim vim: set ts=4 sw=4 et fdm=marker :
 { config, pkgs, inputs, sops-nix, lib, ... }: {
 imports = [
-    ./common.nix
-    ./rclone.nix
+    ./../home_common.nix
+    ./../home_rclone.nix
 ];
 }

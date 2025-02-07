@@ -1,6 +1,6 @@
 # vim vim: set ts=4 sw=4 et fdm=marker :
 { config, pkgs, inputs, sops-nix, lib, ... }: let 
-    vars = import ./../vars.nix;
+    vars = import ./vars.nix;
 in {
 
 #{{{ Basic Stuff
@@ -21,7 +21,7 @@ extraConfig.init.defaultBranch = "main";
 systemd.user.services.mbsync.Unit.After = [ "sops-nix.service" ];
 sops = {
     age.keyFile = "${config.home.homeDirectory}/.config/sops/age/keys.txt";
-    defaultSopsFile = ./../secrets.yaml;
+    defaultSopsFile = ./../resources/secrets.yaml;
     defaultSymlinkPath = "/run/user/1000/secrets";
     defaultSecretsMountPoint = "/run/user/1000/secrets.d";
 };

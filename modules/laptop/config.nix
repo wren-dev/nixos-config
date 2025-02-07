@@ -6,8 +6,8 @@ in {
 #{{{ Basic Stuff
 imports = [
     (modulesPath + "/installer/scan/not-detected.nix")
-    ./common.nix
-    ./laptop-disko.nix
+    ./../common.nix
+    ./disko.nix
 ];
 system.stateVersion = "24.11"; # Did you read the comment?
 time.timeZone = "America/Chicago";

@@ -15,24 +15,29 @@ inputs = {
         url = "github:nix-community/disko";
         inputs.nixpkgs.follows = "nixpkgs";
     };
+    nixvim = {
+        url = "github:nix-community/nixvim";
+        inputs.nixpkgs.follows = "nixpkgs";
+    };
 };
 
-outputs = inputs@{ nixpkgs, home-manager, sops-nix, disko, ... }: let
-    vars = import ./vars.nix;
+outputs = inputs@{ nixpkgs, home-manager, sops-nix, disko, nixvim, ... }: let
+    vars = import ./modules/vars.nix;
 in {
     nixosConfigurations = {
         ${vars.hostNames.laptop} = nixpkgs.lib.nixosSystem {
             system = "x86_64-linux";
             specialArgs = { inherit inputs; };
             modules = [
-                ./host/laptop.nix
+                ./modules/laptop/config.nix
                 home-manager.nixosModules.home-manager {
                     home-manager = {
                         useGlobalPkgs = true;
                         useUserPackages = true;
                         users.${vars.userName}.imports = [
-                            ./home/laptop.nix
+                            ./modules/laptop/home.nix
                             inputs.sops-nix.homeManagerModule
+                            inputs.nixvim.homeManagerModules.nixvim
                         ];
                         extraSpecialArgs = { inherit inputs; };
                         sharedModules = [sops-nix.homeManagerModules.sops ];
