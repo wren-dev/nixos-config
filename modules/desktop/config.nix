@@ -53,7 +53,7 @@ networking = {
     hostName = vars.hostNames.desktop; # Define your hostname.
     networkmanager.enable = true;
     firewall.allowedTCPPorts = [ 22 53 ];
-    firewall.allowedUDPPorts = [ 22 53 ];
+    firewall.allowedUDPPorts = [ 22 53  config.services.tailscale.port ];
 };
 #}}}
 

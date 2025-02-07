@@ -30,7 +30,7 @@ networking = {
     hostName = vars.hostNames.laptop; # Define your hostname.
     networkmanager.enable = true;
     firewall.allowedTCPPorts = [ 22 53 ];
-    firewall.allowedUDPPorts = [ 53 ];
+    firewall.allowedUDPPorts = [ 53  config.services.tailscale.port ];
 };
 #}}}
 
