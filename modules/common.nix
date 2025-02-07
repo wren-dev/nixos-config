@@ -119,6 +119,7 @@ environment.systemPackages = with pkgs; [
     rclone
     age
     sops
+    ssh-to-age
     cloudflare-dyndns
     tailscale
     statix
@@ -137,6 +138,8 @@ environment.systemPackages = with pkgs; [
     unzip
     ripgrep
     keepassxc
+    tmux
+    sshfs
 ];
 #}}}
 
