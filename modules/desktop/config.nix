@@ -12,25 +12,25 @@ imports = [
 system.stateVersion = "24.11"; # Did you read the comment?
 time.timeZone = "America/Chicago";
 nixpkgs.hostPlatform = lib.mkDefault "x86_64-linux";
-hardware.cpu.intel.updateMicrocode = lib.mkDefault config.hardware.enableRedistributableFirmware;
+hardware.cpu.amd.updateMicrocode = lib.mkDefault config.hardware.enableRedistributableFirmware;
 #}}}
 
 #{{{ Boot
 boot.loader.systemd-boot.enable = true;
 boot.loader.efi.canTouchEfiVariables = true;
-boot.initrd.availableKernelModules = [ "ahci" "xhci_pci" "usb_storage" "sd_mod" "sdhci_pci" "rtsx_usb_sdmmc" ];
+boot.initrd.availableKernelModules = [ "ahci" "xhci_pci" "usb_storage" "sd_mod" "usbhid" ];
 boot.initrd.kernelModules = [ "dm-snapshot" ];
-boot.kernelModules = [ "kvm-intel" ];
+boot.kernelModules = [ "kvm-amd" ];
 boot.extraModulePackages = [ ];
 #}}}
 
 #{{{ Networking
 networking = {
     useDHCP = lib.mkDefault true;
-    hostName = vars.hostNames.laptop; # Define your hostname.
+    hostName = vars.hostNames.desktop; # Define your hostname.
     networkmanager.enable = true;
     firewall.allowedTCPPorts = [ 22 53 ];
-    firewall.allowedUDPPorts = [ 53 ];
+    firewall.allowedUDPPorts = [ 22 53 ];
 };
 #}}}
 
