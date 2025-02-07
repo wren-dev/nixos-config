@@ -24,6 +24,29 @@ boot.kernelModules = [ "kvm-amd" ];
 boot.extraModulePackages = [ ];
 #}}}
 
+#{{{ Fucking stop suspending
+systemd = {
+    targets = {
+        sleep = {
+            enable = false;
+            unitConfig.DefaultDependencies = "no";
+        };
+        suspend = {
+            enable = false;
+            unitConfig.DefaultDependencies = "no";
+        };
+        hibernate = {
+            enable = false;
+            unitConfig.DefaultDependencies = "no";
+        };
+        "hybrid-sleep" = {
+            enable = false;
+            unitConfig.DefaultDependencies = "no";
+        };
+    };
+}; 
+#}}}
+
 #{{{ Networking
 networking = {
     useDHCP = lib.mkDefault true;
