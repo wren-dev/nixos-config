@@ -39,6 +39,7 @@ services.xserver = {
     enable = true;
     displayManager.gdm.enable = true;
     desktopManager.gnome.enable = true;
+    displayManager.gdm.autoSuspend = false;
     xkb = {
         layout = "us";
         variant = "";
