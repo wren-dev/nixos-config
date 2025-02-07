@@ -1,9 +1,6 @@
 # vim vim: set ts=4 sw=4 et fdm=marker :
 
-#TODOL: Encrypted swap, BTRFS
-{ config, lib, pkgs, modulesPath, inputs, ... }: let
-    vars = import ./../vars.nix;
-in {
+{
 
 disko.devices.disk.internal.type = "disk";
 disko.devices.disk.internal.device = "/dev/mmcblk0";
