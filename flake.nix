@@ -15,9 +15,13 @@ inputs = {
         url = "github:nix-community/disko";
         inputs.nixpkgs.follows = "nixpkgs";
     };
+    lix = {
+        url = "https://git.lix.systems/lix-project/nixos-module/archive/2.92.0.tar.gz";
+        inputs.nixpkgs.follows = "nixpkgs";
+    };
 };
 
-outputs = inputs@{ nixpkgs, home-manager, sops-nix, disko, ... }: let
+outputs = inputs@{ nixpkgs, home-manager, sops-nix, disko, lix, ... }: let
     vars = import ./modules/vars.nix;
 in {
     nixosConfigurations = {
@@ -40,6 +44,7 @@ in {
                 }
                 sops-nix.nixosModules.sops
                 disko.nixosModules.disko
+                lix.nixosModules.default
             ];
         };
         ${vars.hostNames.desktop} = nixpkgs.lib.nixosSystem {
@@ -61,6 +66,7 @@ in {
                 }
                 sops-nix.nixosModules.sops
                 disko.nixosModules.disko
+                lix.nixosModules.default
             ];
         };
     };

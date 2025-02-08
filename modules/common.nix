@@ -8,6 +8,7 @@ imports = [
     inputs.sops-nix.nixosModules.sops
 ];
 nix.settings.experimental-features = [ "nix-command" "flakes" ];
+nix.settings.trusted-users = [ "root" vars.userName ];
 nixpkgs.config.allowUnfree = true;
 #{{{ Locale
 i18n.defaultLocale = "en_US.UTF-8";
@@ -114,6 +115,21 @@ systemd.services.tailscale-autoconnect = {
 };
 #}}}
 
+#{{{ Hosts
+networking.extraHosts = ''
+    ts-desktop 100.117.243.126
+    ts-laptop 100.103.251.85
+'';
+#}}}
+
+#{{{ Sudo
+security.sudo.wheelNeedsPassword = false;
+security.sudo.extraConfig = ''
+    # rollback results in sudo lectures after each reboot
+    Defaults lecture = never
+'';
+#}}}
+
 #{{{ Users
 sops.secrets.machine-password.neededForUsers = true;
 users = {
@@ -176,6 +192,8 @@ environment.systemPackages = with pkgs; [
     keepassxc
     tmux
     sshfs
+    lm_sensors
+    htop
 ];
 #}}}
 
