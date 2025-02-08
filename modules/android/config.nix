@@ -8,6 +8,9 @@ nix.extraOptions = ''
 # Backup etc files instead of failing to activate
 environment.etcBackupExtension = ".bak";
 
+user.uid = 10279;
+user.gid = 10279;
+
 environment.packages = with pkgs; [
     neovim
     rsync
