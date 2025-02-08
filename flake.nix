@@ -19,9 +19,13 @@ inputs = {
         url = "https://git.lix.systems/lix-project/nixos-module/archive/2.92.0.tar.gz";
         inputs.nixpkgs.follows = "nixpkgs";
     };
+    nix-on-droid = {
+        url = "github:nix-community/nix-on-droid/release-24.05";
+        inputs.nixpkgs.follows = "nixpkgs";
+    };
 };
 
-outputs = inputs@{ nixpkgs, home-manager, sops-nix, disko, lix, ... }: let
+outputs = inputs@{ nixpkgs, home-manager, sops-nix, disko, lix, nix-on-droid, ... }: let
     vars = import ./modules/vars.nix;
 in {
     nixosConfigurations = {
@@ -69,6 +73,10 @@ in {
                 lix.nixosModules.default
             ];
         };
+    };
+    nixOnDroidConfigurations.default = nix-on-droid.lib.nixOnDroidConfiguration {
+        pkgs = import nixpkgs { system = "aarch64-linux"; };
+        modules = [ ./modules/android/config.nix ];
     };
 };
 }
