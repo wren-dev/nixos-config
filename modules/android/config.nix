@@ -1,4 +1,4 @@
-{ config, lib, pkgs, .. }: {
+{ config, lib, pkgs, ... }: {
 
 time.timeZone = "America/Chicago";
 system.stateVersion = "24.05";
