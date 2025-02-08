@@ -52,34 +52,18 @@ networking = {
     useDHCP = lib.mkDefault true;
     hostName = vars.hostNames.desktop; # Define your hostname.
     networkmanager.enable = true;
-    firewall.allowedTCPPorts = [ 22 53 ];
-    firewall.allowedUDPPorts = [ 22 53  config.services.tailscale.port ];
+    firewall.allowedTCPPorts = [ 9022 ];
+    firewall.allowedUDPPorts = [ config.services.tailscale.port ];
 };
-#}}}
 
-#{{{ Desktop Environment 
-services.xserver = {
+sops.secrets.cloudflare-token = {};
+services.cloudflare-dyndns = {
     enable = true;
-    displayManager.gdm.enable = true;
-    desktopManager.gnome.enable = true;
-    displayManager.gdm.autoSuspend = false;
-    xkb = {
-        layout = "us";
-        variant = "";
-    };
+    domains = [ "desktop.wren-homepage.online" ];
+    apiTokenFile = config.sops.secrets.cloudflare-token.path;
 };
-services.displayManager.autoLogin = {
-    enable = true;
-    user = vars.userName;
-};
-
 #}}}
 
-#{{{ Services
-
-services.printing.enable = true;
-
-#}}}
 
 
 }

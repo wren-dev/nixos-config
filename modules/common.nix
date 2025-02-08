@@ -50,7 +50,7 @@ services = {
     };
     openssh = {
         enable = true;
-        ports = [ 22 ];
+        ports = [ 9022 ];
         settings = {
             PasswordAuthentication = true;
             AllowUsers = [ vars.userName ];
@@ -64,17 +64,12 @@ services = {
         maxretry = 5;
         ignoreIP = [
             "10.0.0.0/8" "172.16.0.0/12" "192.168.0.0/16" "127.0.0.1"
+            "100.117.243.126" "100.103.251.85" "100.87.171.106"
         ];
         bantime = "72h";
     };
 };
 
-sops.secrets.cloudflare-token = {};
-services.cloudflare-dyndns = {
-    enable = false;
-    domains = [ "???.wren-homepage.online" ];
-    apiTokenFile = config.sops.secrets.cloudflare-token.path;
-};
 
 #}}}
 
@@ -117,8 +112,9 @@ systemd.services.tailscale-autoconnect = {
 
 #{{{ Hosts
 networking.extraHosts = ''
-    ts-desktop 100.117.243.126
-    ts-laptop 100.103.251.85
+    100.117.243.126 ts-desktop
+    100.103.251.85  ts-laptop
+    100.87.171.106 ts-phone
 '';
 #}}}
 
