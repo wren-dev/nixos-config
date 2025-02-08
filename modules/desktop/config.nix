@@ -13,6 +13,8 @@ system.stateVersion = "24.11"; # Did you read the comment?
 time.timeZone = "America/Chicago";
 nixpkgs.hostPlatform = lib.mkDefault "x86_64-linux";
 hardware.cpu.amd.updateMicrocode = lib.mkDefault config.hardware.enableRedistributableFirmware;
+# Allow building aarch64 pkgs
+boot.binfmt.emulatedSystems = [ "aarch64-linux" ];
 #}}}
 
 #{{{ Boot
