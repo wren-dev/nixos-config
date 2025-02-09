@@ -8,6 +8,7 @@ imports = [
     (modulesPath + "/installer/scan/not-detected.nix")
     ./../../common.nix
     ./../../sops.nix
+    ./../../sshd.nix
     ./../../tailscale.nix
     ./disko.nix
     ./ddns.nix

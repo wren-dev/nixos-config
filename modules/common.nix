@@ -1,12 +1,11 @@
 # vim vim: set ts=4 sw=4 et fdm=marker :
 { config, pkgs, inputs, ... }: let
-    vars = import ./vars.nix;
 in {
 
-#{{{ Basic Stuff
 nix.settings.experimental-features = [ "nix-command" "flakes" ];
 nix.settings.trusted-users = [ "root" vars.userName ];
 nixpkgs.config.allowUnfree = true;
+
 #{{{ Locale
 i18n.defaultLocale = "en_US.UTF-8";
 
@@ -22,41 +21,6 @@ i18n.extraLocaleSettings = {
     LC_TIME = "en_US.UTF-8";
 };
 #}}}
-#}}}
-
-#{{{ Services
-security.rtkit.enable = true;
-services = {
-    pipewire = {
-        enable = true;
-        alsa.enable = true;
-        alsa.support32Bit = true;
-        pulse.enable = true;
-    };
-    openssh = {
-        enable = true;
-        ports = [ 9022 ];
-        settings = {
-            PasswordAuthentication = true;
-            AllowUsers = [ vars.userName ];
-            UseDns = true;
-            X11Forwarding = false;
-            PermitRootLogin = "no";
-        };
-    };
-    fail2ban = {
-        enable = true;
-        maxretry = 3;
-        ignoreIP = [
-            "10.0.0.0/8" "172.16.0.0/12" "192.168.0.0/16" "127.0.0.1"
-            "100.117.243.126" "100.103.251.85" "100.87.171.106"
-        ];
-        bantime = "72h";
-    };
-};
-
-
-#}}}
 
 #{{{ Sudo
 security.sudo.wheelNeedsPassword = false;
@@ -64,6 +28,20 @@ security.sudo.extraConfig = ''
     # rollback results in sudo lectures after each reboot
     Defaults lecture = never
 '';
+#}}}
+
+#{{{ Services
+security.rtkit.enable = true; #Needed for pipewire?
+services = {
+    pipewire = {
+        enable = true;
+        alsa.enable = true;
+        alsa.support32Bit = true;
+        pulse.enable = true;
+    };
+};
+
+
 #}}}
 
 #{{{ Users
@@ -84,18 +62,13 @@ users = {
     };
 };
 
-# Workaround for GNOME autologin: https://github.com/NixOS/nixpkgs/issues/103746#issuecomment-945091229
-systemd.services."getty@tty1".enable = false;
-systemd.services."autovt@tty1".enable = false;
 #}}}
 
-programs.fuse.userAllowOther = true;
 #{{{ Sys Packages
 environment.systemPackages = with pkgs; [
     # Basic System Utilities
-    git wget rsync rclone sshfs
+    git wget rsync sshfs
     tmux htop ripgrep vim
-    unzip
     lm_sensors
 
     # Nix Utils
