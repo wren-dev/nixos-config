@@ -44,11 +44,13 @@ vim.opt.rtp:prepend(lazypath)
 require('lazy').setup({
 {
   'nvim-orgmode/orgmode',
+  version = false,
   event = 'VeryLazy',
   ft = { 'org' },
   config = function()
     -- Setup orgmode
     require('orgmode').setup({
+      org_cycle_separator_lines = 1,
       org_agenda_files = '~/mnt/dropbox/notes/org/**/*',
       org_default_notes_file = '~/mnt/dropbox/notes/org/refile.org',
     })
@@ -62,8 +64,33 @@ require('lazy').setup({
   end,
 },
 {
+  "nvim-neo-tree/neo-tree.nvim",
+  branch = "v3.x",
+  dependencies = {
+    "nvim-lua/plenary.nvim",
+    "nvim-tree/nvim-web-devicons", -- not strictly required, but recommended
+    "MunifTanjim/nui.nvim",
+    -- {"3rd/image.nvim", opts = {}}, -- Optional image support in preview window: See `# Preview Mode` for more information
+  }
+},
+{
+    "nvim-treesitter/nvim-treesitter",
+    build = ":TSUpdate",
+    config = function () 
+      local configs = require("nvim-treesitter.configs")
+
+      configs.setup({
+          ensure_installed = { "c", "lua", "vim", "vimdoc", "query", "javascript", "html" },
+          sync_install = false,
+          highlight = { enable = true },
+          indent = { enable = true },  
+        })
+    end
+ },
+--[[
+{
   "chipsenkbeil/org-roam.nvim",
-  event = "VeryLazy",
+  lazy = true,
   tag = "0.1.1",
   dependencies = {
     {
@@ -81,7 +108,22 @@ require('lazy').setup({
     })
   end
 },
+--]]
+{
+  "mrshmllow/orgmode-babel.nvim",
+  dependencies = {
+    "nvim-orgmode/orgmode",
+    "nvim-treesitter/nvim-treesitter"
+  },
+  cmd = { "OrgExecute", "OrgTangle" },
+  opts = {
+    -- by default, none are enabled
+    langs = { "python", "lua", ... },
 
+    -- paths to emacs packages to additionally load
+    load_paths = {}
+  }
+},
   {
     'lewis6991/gitsigns.nvim',
     opts = {
