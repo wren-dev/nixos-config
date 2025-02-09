@@ -1,17 +1,18 @@
 # vim vim: set ts=4 sw=4 et fdm=marker :
 { config, lib, pkgs, modulesPath, inputs, ... }: let
-    vars = import ./../vars.nix;
+    vars = import ./../../vars.nix;
 in {
 
 #{{{ Basic Stuff
 imports = [
     (modulesPath + "/installer/scan/not-detected.nix")
     ./disko.nix
-    ./../common.nix
-    ./../sops.nix
-    ./../tailscale.nix
-    ./../firefox.nix
-    ./../neovim.nix
+    ./../../common.nix
+    ./../../sops.nix
+    ./../../tailscale.nix
+    ./../../firefox.nix
+    ./../../neovim.nix
+    ./../../rclone.nix
 ];
 system.stateVersion = "24.11"; # Did you read the comment?
 time.timeZone = "America/Chicago";

@@ -33,13 +33,13 @@ in {
             system = "x86_64-linux";
             specialArgs = { inherit inputs; };
             modules = [
-                ./modules/laptop/config.nix
+                ./modules/host/laptop/config.nix
                 home-manager.nixosModules.home-manager {
                     home-manager = {
                         useGlobalPkgs = true;
                         useUserPackages = true;
                         users.${vars.userName}.imports = [
-                            ./modules/laptop/home.nix
+                            ./modules/host/laptop/home.nix
                             inputs.sops-nix.homeManagerModule
                         ];
                         extraSpecialArgs = { inherit inputs; };
@@ -55,13 +55,13 @@ in {
             system = "x86_64-linux";
             specialArgs = { inherit inputs; };
             modules = [
-                ./modules/desktop/config.nix
+                ./modules/host/desktop/config.nix
                 home-manager.nixosModules.home-manager {
                     home-manager = {
                         useGlobalPkgs = true;
                         useUserPackages = true;
                         users.${vars.userName}.imports = [
-                            ./modules/desktop/home.nix
+                            ./modules/host/desktop/home.nix
                             inputs.sops-nix.homeManagerModule
                         ];
                         extraSpecialArgs = { inherit inputs; };

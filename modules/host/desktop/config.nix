@@ -1,14 +1,14 @@
 # vim vim: set ts=4 sw=4 et fdm=marker :
 { config, lib, pkgs, modulesPath, inputs, ... }: let
-    vars = import ./../vars.nix;
+    vars = import ./../../vars.nix;
 in {
 
 #{{{ Basic Stuff
 imports = [
     (modulesPath + "/installer/scan/not-detected.nix")
-    ./../common.nix
-    ./../sops.nix
-    ./../tailscale.nix
+    ./../../common.nix
+    ./../../sops.nix
+    ./../../tailscale.nix
     ./disko.nix
     ./ddns.nix
 ];
