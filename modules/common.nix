@@ -73,51 +73,6 @@ services = {
 
 #}}}
 
-#{{{ Tailscale
-
-
-# https://login.tailscale.com/admin/settings/authkeys
-sops.secrets.tailscale-token = {};
-
-services.tailscale.enable = true;
-systemd.services.tailscale-autoconnect = {
-    description = "Automatic connection to Tailscale";
-
-    # make sure tailscale is running before trying to connect to tailscale
-    after = [ "network-pre.target" "tailscale.service" ];
-    wants = [ "network-pre.target" "tailscale.service" ];
-    wantedBy = [ "multi-user.target" ];
-
-    # set this service as a oneshot job
-    serviceConfig.Type = "oneshot";
-
-    # have the job run this shell script
-    script = with pkgs; ''
-        echo "Waiting for tailscale.service start completion ..." 
-        sleep 5
-
-        echo "Checking if already authenticated to Tailscale ..."
-        status="$(${tailscale}/bin/tailscale status -json | ${jq}/bin/jq -r .BackendState)"
-        if [ $status = "Running" ]; then  # do nothing
-            echo "Already authenticated to Tailscale, exiting."
-            exit 0
-        fi
-
-        # otherwise authenticate with tailscale
-        echo "Authenticating with Tailscale ..."
-        ${tailscale}/bin/tailscale up --auth-key file:${config.sops.secrets.tailscale-token.path}
-    '';
-};
-#}}}
-
-#{{{ Hosts
-networking.extraHosts = ''
-    100.117.243.126 ts-desktop
-    100.103.251.85  ts-laptop
-    100.87.171.106 ts-phone
-'';
-#}}}
-
 #{{{ Sudo
 security.sudo.wheelNeedsPassword = false;
 security.sudo.extraConfig = ''
@@ -134,9 +89,6 @@ users = {
         isNormalUser = true;
         description = vars.userName;
         extraGroups = [ "networkmanager" "wheel" ];
-        packages = with pkgs; [
-        #  thunderbird
-        ];
         hashedPasswordFile = config.sops.secrets.machine-password.path;
     };
     users.root = {
@@ -162,34 +114,24 @@ programs = {
 
 #{{{ Sys Packages
 environment.systemPackages = with pkgs; [
-    git
-    wget
-    rclone
-    age
-    sops
-    ssh-to-age
-    cloudflare-dyndns
-    tailscale
-    statix
-    nvd
-    cached-nix-shell
-    nix-tree
-    nix-output-monitor
-    nix-melt
-    nix-index
-    nix-du
-    nix-diff
-    nh
-    manix
-    gnumake
-    gcc
+    # Basic System Utilities
+    age sops ssh-to-age
+    git wget rclone sshfs
+    tmux htop ripgrep
     unzip
-    ripgrep
-    keepassxc
-    tmux
-    sshfs
     lm_sensors
-    htop
+
+    # Nix Utils
+    nix-tree nix-melt nix-index nix-du nix-diff
+    nh manix nvd cached-nix-shell
+
+    # Nix Building
+    nix-output-monitor statix
+    gcc gnumake
+    treefmt emacs
+
+    cloudflare-dyndns
+    keepassxc
 ];
 #}}}
 

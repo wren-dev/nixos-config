@@ -1,0 +1,19 @@
+#+TITLE: Nix Cfg
+
+* Introduction
+This is a literate programming file for configuring my Nix systems.
+#+NAME: tangle-warning
+#+begin_src nix
+	# This file is auto-generated from an orgmode source file
+	# http://github.com/wren-dev/nixcfg/nix.org
+#+end_src
+
+#+begin_src nix :noweb yes :tangle ./modules/test.nix
+    <<tangle-warning>>
+    # I wonder if this will work?
+#+end_src
+
+#+begin_src nix :noweb yes :tangle ./modules/test2.nix
+    <<tangle-warning>>
+    # I really hope it does.
+#+end_src
