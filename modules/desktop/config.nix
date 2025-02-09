@@ -7,8 +7,10 @@ in {
 imports = [
     (modulesPath + "/installer/scan/not-detected.nix")
     ./../common.nix
+    ./../sops.nix
     ./../tailscale.nix
     ./disko.nix
+    ./ddns.nix
 ];
 system.stateVersion = "24.11"; # Did you read the comment?
 time.timeZone = "America/Chicago";
@@ -53,20 +55,11 @@ systemd = {
 #{{{ Networking
 networking = {
     useDHCP = lib.mkDefault true;
-    hostName = vars.hostNames.desktop; # Define your hostname.
+    hostName = vars.hostNames.desktop;
     networkmanager.enable = true;
     firewall.allowedTCPPorts = [ 9022 ];
     firewall.allowedUDPPorts = [ config.services.tailscale.port ];
 };
 
-sops.secrets.cloudflare-token = {};
-services.cloudflare-dyndns = {
-    enable = true;
-    domains = [ "desktop.wren-homepage.online" ];
-    apiTokenFile = config.sops.secrets.cloudflare-token.path;
-};
 #}}}
-
-
-
 }

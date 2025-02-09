@@ -40,4 +40,6 @@ networking.extraHosts = ''
     100.103.251.85  ts-laptop
     100.87.171.106 ts-phone
 '';
+networking.firewall.allowedUDPPorts = [ config.services.tailscale.port ];
+
 }

@@ -4,9 +4,6 @@
 in {
 
 #{{{ Basic Stuff
-imports = [
-    inputs.sops-nix.nixosModules.sops
-];
 nix.settings.experimental-features = [ "nix-command" "flakes" ];
 nix.settings.trusted-users = [ "root" vars.userName ];
 nixpkgs.config.allowUnfree = true;
@@ -25,18 +22,6 @@ i18n.extraLocaleSettings = {
     LC_TIME = "en_US.UTF-8";
 };
 #}}}
-#}}}
-
-#{{{ Secrets
-sops = {
-    defaultSopsFile = ./../res/secrets.yaml;
-    validateSopsFiles = false;
-    age = {
-        sshKeyPaths = [ "/etc/ssh/ssh_host_ed25519_key" ];
-        keyFile = "/var/lib/sops-nix/key.txt";
-        generateKey = true;
-    };
-};
 #}}}
 
 #{{{ Services
@@ -61,7 +46,7 @@ services = {
     };
     fail2ban = {
         enable = true;
-        maxretry = 5;
+        maxretry = 3;
         ignoreIP = [
             "10.0.0.0/8" "172.16.0.0/12" "192.168.0.0/16" "127.0.0.1"
             "100.117.243.126" "100.103.251.85" "100.87.171.106"
@@ -90,6 +75,9 @@ users = {
         description = vars.userName;
         extraGroups = [ "networkmanager" "wheel" ];
         hashedPasswordFile = config.sops.secrets.machine-password.path;
+        packages = [
+            pkgs.keepassxc
+        ];
     };
     users.root = {
         hashedPasswordFile = config.sops.secrets.machine-password.path;
@@ -101,37 +89,23 @@ systemd.services."getty@tty1".enable = false;
 systemd.services."autovt@tty1".enable = false;
 #}}}
 
-#{{{ Program Modules
-programs = {
-    firefox.enable = true;
-    neovim = {
-        enable = true;
-        defaultEditor = true;
-    };
-    fuse.userAllowOther = true;
-};
-#}}}
-
+programs.fuse.userAllowOther = true;
 #{{{ Sys Packages
 environment.systemPackages = with pkgs; [
     # Basic System Utilities
-    age sops ssh-to-age
-    git wget rclone sshfs
-    tmux htop ripgrep
+    git wget rsync rclone sshfs
+    tmux htop ripgrep vim
     unzip
     lm_sensors
 
     # Nix Utils
     nix-tree nix-melt nix-index nix-du nix-diff
     nh manix nvd cached-nix-shell
-
-    # Nix Building
     nix-output-monitor statix
+
+    # Development
     gcc gnumake
     treefmt emacs
-
-    cloudflare-dyndns
-    keepassxc
 ];
 #}}}
 
