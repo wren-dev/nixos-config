@@ -1,4 +1,6 @@
-{ pkgs, inputs, ... }: {
+{ config, pkgs, inputs, ... }: let
+    vars = import ./vars.nix;
+in {
 
 imports = [
     inputs.sops-nix.nixosModules.sops
@@ -19,5 +21,15 @@ environment.systemPackages = [
     pkgs.sops
     pkgs.ssh-to-age
 ];
+
+home-manager.users.${vars.userName} = { config, pkgs, inputs, sops-nix, lib, ... }: {
+    systemd.user.services.mbsync.Unit.After = [ "sops-nix.service" ];
+    sops = {
+        age.keyFile = "${config.home.homeDirectory}/.config/sops/age/keys.txt";
+        defaultSopsFile = ./../res/secrets.yaml;
+        defaultSymlinkPath = "/run/user/1000/secrets";
+        defaultSecretsMountPoint = "/run/user/1000/secrets.d";
+    };
+};
 
 }

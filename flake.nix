@@ -39,7 +39,6 @@ in {
                         useGlobalPkgs = true;
                         useUserPackages = true;
                         users.${vars.userName}.imports = [
-                            ./modules/host/laptop/home.nix
                             inputs.sops-nix.homeManagerModule
                         ];
                         extraSpecialArgs = { inherit inputs; };
@@ -61,7 +60,6 @@ in {
                         useGlobalPkgs = true;
                         useUserPackages = true;
                         users.${vars.userName}.imports = [
-                            ./modules/host/desktop/home.nix
                             inputs.sops-nix.homeManagerModule
                         ];
                         extraSpecialArgs = { inherit inputs; };
@@ -76,7 +74,7 @@ in {
     };
     nixOnDroidConfigurations.default = nix-on-droid.lib.nixOnDroidConfiguration {
         pkgs = import nixpkgs { system = "aarch64-linux"; };
-        modules = [ ./modules/android/config.nix ];
+        modules = [ ./modules/host/android/config.nix ];
     };
 };
 }

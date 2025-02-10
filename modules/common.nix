@@ -31,20 +31,6 @@ security.sudo.extraConfig = ''
 '';
 #}}}
 
-#{{{ Services
-security.rtkit.enable = true; #Needed for pipewire?
-services = {
-    pipewire = {
-        enable = true;
-        alsa.enable = true;
-        alsa.support32Bit = true;
-        pulse.enable = true;
-    };
-};
-
-
-#}}}
-
 #{{{ Users
 sops.secrets.machine-password.neededForUsers = true;
 users = {
@@ -65,10 +51,27 @@ users = {
 
 #}}}
 
+#{{{ Home Manager
+home-manager.users.${vars.userName} = { config, pkgs, inputs, sops-nix, lib, ... }: {
+    home.username = vars.userName;
+    home.homeDirectory = "/home/${vars.userName}";
+    home.stateVersion = "24.11";
+    programs.home-manager.enable = true;
+
+    programs.git = {
+        enable = true;
+        userName  = vars.gitUserName;
+        userEmail = vars.email;
+        extraConfig.init.defaultBranch = "main";
+    };
+
+};
+#}}}
+
 #{{{ Sys Packages
 environment.systemPackages = with pkgs; [
     # Basic System Utilities
-    git wget rsync sshfs
+    git wget rsync sshfs openssh
     tmux htop ripgrep vim
     lm_sensors
 
