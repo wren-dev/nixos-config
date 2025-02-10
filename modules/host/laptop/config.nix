@@ -14,6 +14,7 @@ imports = [
     ./../../services/tailscale.nix
     ./../../services/printing.nix
     ./../../desktop-env/sway.nix
+    ./../../desktop-env/kmscon.nix
 ];
 #}}}
 

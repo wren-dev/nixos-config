@@ -11,10 +11,17 @@ imports = [
 environment.systemPackages = [ pkgs.cage ];
 users.users.${vars.userName}.packages = [
     pkgs.wmenu
+    pkgs.wl-gammarelay-rs
 ];
 
 services.gnome.gnome-keyring.enable = true;
 security.polkit.enable = true;
+
+fonts.packages = [
+    inputs.apple-fonts.packages.x86_64-linux.sf-pro
+    inputs.apple-fonts.packages.x86_64-linux.sf-mono
+    inputs.apple-fonts.packages.x86_64-linux.ny
+];
 
 programs.sway = {
     enable = true;

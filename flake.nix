@@ -23,6 +23,10 @@ inputs = {
         url = "github:nix-community/nix-on-droid/release-24.05";
         inputs.nixpkgs.follows = "nixpkgs";
     };
+    apple-fonts = {
+        url = "git+ssh://git@gitlab.com/wren-dev-nix/apple-fonts.git";
+        inputs.nixpkgs.follows = "nixpkgs";
+    };
 };
 
 outputs = inputs@{ nixpkgs, home-manager, sops-nix, disko, lix, nix-on-droid, ... }: let

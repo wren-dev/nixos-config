@@ -73,9 +73,14 @@ home-manager.users.${vars.userName} = { config, pkgs, inputs, sops-nix, lib, ...
         PATH=/run/wrappers/bin/:$PATH
     '';
     systemd.user.services.rclone-proton = mkRcloneService "proton" // {
+        Service.Restart= "always";
+        Service.RestartSec = 30;
         Service.EnvironmentFile =  config.sops.templates.rclone-protonenv.path;
         Service.ExecStart = ''
             ${pkgs.rclone}/bin/rclone --config /dev/null mount --allow-other --vfs-cache-mode full --cache-dir /home/${vars.userName}/.local/cache --protondrive-username $PROTON_USER --protondrive-password $PROTON_PASS :protondrive: /home/${vars.userName}/mnt/proton
+        '';
+        Service.ExecStop = ''
+            /run/wrappers/bin/fusermount -zu /home/${vars.userName}/mnt/dropbox
         '';
     };
 
