@@ -1,5 +1,6 @@
 # vim vim: set ts=4 sw=4 et fdm=marker :
 { config, pkgs, inputs, ... }: let
+    vars = import ./vars.nix;
 in {
 
 nix.settings.experimental-features = [ "nix-command" "flakes" ];
