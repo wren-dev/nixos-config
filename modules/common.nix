@@ -40,15 +40,11 @@ users = {
         description = vars.userName;
         extraGroups = [ "networkmanager" "wheel" ];
         hashedPasswordFile = config.sops.secrets.machine-password.path;
-        packages = [
-            pkgs.keepassxc
-        ];
     };
     users.root = {
         hashedPasswordFile = config.sops.secrets.machine-password.path;
     };
 };
-
 #}}}
 
 #{{{ Home Manager
@@ -57,14 +53,6 @@ home-manager.users.${vars.userName} = { config, pkgs, inputs, sops-nix, lib, ...
     home.homeDirectory = "/home/${vars.userName}";
     home.stateVersion = "24.11";
     programs.home-manager.enable = true;
-
-    programs.git = {
-        enable = true;
-        userName  = vars.gitUserName;
-        userEmail = vars.email;
-        extraConfig.init.defaultBranch = "main";
-    };
-
 };
 #}}}
 
@@ -74,15 +62,6 @@ environment.systemPackages = with pkgs; [
     git wget rsync sshfs openssh
     tmux htop ripgrep vim
     lm_sensors
-
-    # Nix Utils
-    nix-tree nix-melt nix-index nix-du nix-diff
-    nh manix nvd cached-nix-shell
-    nix-output-monitor statix
-
-    # Development
-    gcc gnumake
-    treefmt emacs
 ];
 #}}}
 

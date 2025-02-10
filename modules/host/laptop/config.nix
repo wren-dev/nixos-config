@@ -3,18 +3,21 @@
     vars = import ./../../vars.nix;
 in {
 
-#{{{ Basic Stuff
+#{{{ Imports
 imports = [
     (modulesPath + "/installer/scan/not-detected.nix")
     ./disko.nix
     ./../../common.nix
     ./../../sops.nix
-    ./../../sshd.nix
-    ./../../tailscale.nix
-    ./../../firefox.nix
-    ./../../neovim.nix
-    ./../../rclone.nix
+    ./../../services/rclone.nix
+    ./../../services/sshd.nix
+    ./../../services/tailscale.nix
+    ./../../services/printing.nix
+    ./../../desktop-env/sway.nix
 ];
+#}}}
+
+#{{{ Basics
 system.stateVersion = "24.11"; # Did you read the comment?
 time.timeZone = "America/Chicago";
 nixpkgs.hostPlatform = lib.mkDefault "x86_64-linux";
@@ -35,36 +38,7 @@ networking = {
     useDHCP = lib.mkDefault true;
     hostName = vars.hostNames.laptop; # Define your hostname.
     networkmanager.enable = true;
-    firewall.allowedTCPPorts = [ 9022 ];
-    firewall.allowedUDPPorts = [ config.services.tailscale.port ];
 };
 #}}}
-
-#{{{ Desktop Environment 
-services.xserver = {
-    enable = true;
-    displayManager.gdm.enable = true;
-    desktopManager.gnome.enable = true;
-    xkb = {
-        layout = "us";
-        variant = "";
-    };
-};
-services.displayManager.autoLogin = {
-    enable = true;
-    user = vars.userName;
-};
-
-# Workaround for GNOME autologin: https://github.com/NixOS/nixpkgs/issues/103746#issuecomment-945091229
-systemd.services."getty@tty1".enable = false;
-systemd.services."autovt@tty1".enable = false;
-#}}}
-
-#{{{ Services
-
-services.printing.enable = true;
-
-#}}}
-
 
 }

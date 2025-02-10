@@ -1,6 +1,8 @@
 { config, pkgs, inputs, ... }: let
     vars = import ./vars.nix;
 in {
+
+networking.firewall.allowedTCPPorts = [ 9022 ];
 services.openssh = {
     enable = true;
     ports = [ 9022 ];

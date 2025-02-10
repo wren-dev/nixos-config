@@ -58,8 +58,6 @@ networking = {
     useDHCP = lib.mkDefault true;
     hostName = vars.hostNames.desktop;
     networkmanager.enable = true;
-    firewall.allowedTCPPorts = [ 9022 ];
-    firewall.allowedUDPPorts = [ config.services.tailscale.port ];
 };
 
 #}}}
