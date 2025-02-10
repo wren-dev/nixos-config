@@ -1,8 +1,8 @@
 # vim vim: set ts=4 sw=4 et fdm=marker :
 # TODO: Refactor services into single fn for brevity
-# {{{ Helper function
 { config, lib, pkgs, inputs, ... }: let
-    vars = import ./vars.nix;
+    vars = import ./../vars.nix;
+    # {{{ Helper function
     mkRcloneService = remote : {
             Unit = {
                 Description = "Rclone mount: ${remote}";

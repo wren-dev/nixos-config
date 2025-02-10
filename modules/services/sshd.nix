@@ -1,5 +1,5 @@
 { config, pkgs, inputs, ... }: let
-    vars = import ./vars.nix;
+    vars = import ./../vars.nix;
 in {
 
 networking.firewall.allowedTCPPorts = [ 9022 ];

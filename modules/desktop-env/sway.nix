@@ -9,8 +9,12 @@ imports = [
 ];
 
 environment.systemPackages = [ pkgs.cage ];
+users.users.${vars.userName}.packages = [
+    pkgs.wmenu
+];
 
 services.gnome.gnome-keyring.enable = true;
+security.polkit.enable = true;
 
 programs.sway = {
     enable = true;
@@ -19,20 +23,24 @@ programs.sway = {
 
 programs.regreet = {
     enable = true;
-}
+};
 
 services.greetd = {
     enable = true;
     settings = {
         default_session = {
-            command = "${pkgs.cage}/bin/cage ${pkgs.regreet}/bin/regreet";
+            command = "${pkgs.cage}/bin/cage ${pkgs.greetd.regreet}/bin/regreet";
             user = "greeter";
         };
     };
+};
 environment.etc."greetd/environments".text = ''
     sway
     bash
 '';
+
+home-manager.users.${vars.userName} = { config, pkgs, inputs, sops-nix, lib, ... }: {
+    xdg.configFile."sway/config".source = ./../../res/config/sway/config;
 };
 
 }

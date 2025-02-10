@@ -9,6 +9,8 @@ imports = [
 ];
 
 users.users.${vars.userName}.packages = with pkgs; [
+    kitty
+
     # GUI Apps
     keepassxc
 
