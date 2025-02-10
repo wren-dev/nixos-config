@@ -51,6 +51,10 @@ services.kmscon.extraConfig = ''
 '';
 
 systemd.services."kmsconvt@tty2".wantedBy = [ "multi-user.target" ];
+systemd.services."kmsconvt@tty3".enable = false;
+systemd.services."kmsconvt@tty4".enable = false;
+systemd.services."kmsconvt@tty5".enable = false;
+systemd.services."kmsconvt@tty6".enable = false;
 systemd.services."getty@tty2".enable = false;
 systemd.services."getty@tty3".enable = false;
 systemd.services."getty@tty4".enable = false;
